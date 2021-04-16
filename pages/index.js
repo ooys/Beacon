@@ -6,8 +6,7 @@ import Router from "next/router";
 import React, { useState } from "react";
 import initFirebase from "../services/firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-//import { gapi } from "googleapis";
+import Profile from "../components/Profile";
 
 initFirebase();
 const auth = firebase.auth();
@@ -80,9 +79,18 @@ function SignIn() {
             // const API_KEY = results.credential.accessToken;
             // console.log(API_KEY);
             // authAPI(API_KEY);
-            var profile = results.additionalUserInfo.profile;
-            var credential = results.credential;
-            updateProfile(profile, credential);
+            try {
+                var profile = results.additionalUserInfo.profile;
+                var credential = results.credential;
+                if (profile.hd != "lcps.org") {
+                    throw "Organization not in lcps. Access denied.";
+                }
+                updateProfile(profile, credential);
+            } catch (error) {
+                console.error(error);
+                alert(error);
+                auth.signOut();
+            }
         });
     };
 
@@ -90,13 +98,15 @@ function SignIn() {
         const userRef = db
             .collection("users")
             .doc(firebase.auth().currentUser.uid);
-        console.log(userRef);
 
         await userRef.set({
-            first: String(profile.given_name),
-            last: String(profile.family_name),
-            email: String(profile.email),
-            organization: String(profile.hd),
+            first: profile.given_name,
+            last: profile.family_name,
+            email: profile.email,
+            organization: profile.hd,
+            accessToken: credential.accessToken,
+            idToken: credential.idToken,
+            lastLogin: new firebase.firestore.Timestamp.now(),
         });
     }
 
@@ -120,10 +130,6 @@ function SignOut() {
     );
 }
 
-function Profile(user) {
-    return <></>;
-}
-
 function Index() {
     const [user] = useAuthState(auth);
     //console.log(user);
@@ -132,7 +138,7 @@ function Index() {
         <div>
             {user ? (
                 <>
-                    <Profile />
+                    <Profile uid={user.uid} />
                     <SignOut />
                 </>
             ) : (
