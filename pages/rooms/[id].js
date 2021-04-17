@@ -41,7 +41,7 @@ async function initCall(uid, pc) {
         });
     };
 
-    webcamVideo.srcObject = localStream;
+    // webcamVideo.srcObject = localStream;
     remoteVideo.srcObject = remoteStream;
 
     // callButton.disabled = false;
@@ -115,7 +115,7 @@ async function answerCall(callId, pc) {
         });
     };
 
-    webcamVideo.srcObject = localStream;
+    // webcamVideo.srcObject = localStream;
     remoteVideo.srcObject = remoteStream;
 
     const callDoc = db.collection("rooms").doc(callId);
@@ -245,10 +245,10 @@ function Rooms() {
                     Back
                 </button>
                 <div className="videos">
-                    <span>
+                    {/* <span>
                         <h3>Local Stream</h3>
                         <video id="webcamVideo" autoPlay playsInline></video>
-                    </span>
+                    </span> */}
                     <span>
                         <h3>Remote Stream</h3>
                         <video id="remoteVideo" autoPlay playsInline></video>
@@ -298,10 +298,10 @@ function Rooms() {
                     Back
                 </button>
                 <div className="videos">
-                    <span>
+                    {/* <span>
                         <h3>Local Stream</h3>
                         <video id="webcamVideo" autoPlay playsInline></video>
-                    </span>
+                    </span> */}
                     <span>
                         <h3>Remote Stream</h3>
                         <video id="remoteVideo" autoPlay playsInline></video>
