@@ -1,4 +1,3 @@
-import styles from "../styles/Index.module.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
@@ -6,8 +5,6 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import initFirebase from "../services/firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Profile from "../components/Profile";
-import Signout from "../components/Signout";
 
 initFirebase();
 const auth = firebase.auth();
