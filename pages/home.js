@@ -11,6 +11,18 @@ initFirebase();
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+function StartRoom({ uid }) {
+    const router = useRouter();
+    // console.log(uid);
+    return (
+        <>
+            <button onClick={() => router.push("/rooms/" + uid)}>
+                Match a tutor
+            </button>
+        </>
+    );
+}
+
 function Home() {
     const router = useRouter();
     const [user, loading, error] = useAuthState(auth);
@@ -24,6 +36,7 @@ function Home() {
         return (
             <>
                 <Profile uid={user.uid} />
+                <StartRoom uid={user.uid} />
                 <Signout />
             </>
         );

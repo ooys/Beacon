@@ -1,4 +1,3 @@
-import styles from "../styles/Index.module.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
@@ -6,8 +5,6 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import initFirebase from "../services/firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Profile from "../components/Profile";
-import Signout from "../components/Signout";
 
 initFirebase();
 const auth = firebase.auth();
@@ -77,7 +74,7 @@ function SignIn() {
         //     "https://www.googleapis.com/auth/user.organization.read"
         // );
         auth.signInWithPopup(provider).then((results) => {
-            console.log(results);
+            // console.log(results);
             // const API_KEY = results.credential.accessToken;
             // console.log(API_KEY);
             // authAPI(API_KEY);
@@ -90,7 +87,6 @@ function SignIn() {
                 updateProfile(profile, credential);
             } catch (error) {
                 console.error(error);
-                alert(error);
                 auth.signOut();
                 router.push("/login");
             }
