@@ -74,7 +74,7 @@ function SignIn() {
         //     "https://www.googleapis.com/auth/user.organization.read"
         // );
         auth.signInWithPopup(provider).then((results) => {
-            console.log(results);
+            // console.log(results);
             // const API_KEY = results.credential.accessToken;
             // console.log(API_KEY);
             // authAPI(API_KEY);
@@ -87,7 +87,6 @@ function SignIn() {
                 updateProfile(profile, credential);
             } catch (error) {
                 console.error(error);
-                alert(error);
                 auth.signOut();
                 router.push("/login");
             }
