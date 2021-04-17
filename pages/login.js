@@ -81,12 +81,12 @@ function SignIn() {
             try {
                 var profile = results.additionalUserInfo.profile;
                 var credential = results.credential;
-                if (
-                    profile.hd != "lcps.org" &&
-                    profile.email != "michaelsong4399@gmail.com"
-                ) {
-                    throw "Organization not in LCPS. Access denied.";
-                }
+                // if (
+                //     profile.hd != "lcps.org" &&
+                //     profile.email != "michaelsong4399@gmail.com"
+                // ) {
+                //     throw "Organization not in LCPS. Access denied.";
+                // }
                 updateProfile(profile, credential);
             } catch (error) {
                 console.error(error);
@@ -101,11 +101,18 @@ function SignIn() {
             .collection("users")
             .doc(firebase.auth().currentUser.uid);
 
+        var org = "";
+        if (typeof profile.hd === "undefined") {
+            org = "public";
+        } else {
+            org = profile.hd;
+        }
+
         await userRef.set({
             first: profile.given_name,
             last: profile.family_name,
             email: profile.email,
-            organization: profile.hd,
+            organization: org,
             profilePicture: profile.picture,
             accessToken: credential.accessToken,
             idToken: credential.idToken,
