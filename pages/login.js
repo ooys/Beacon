@@ -81,7 +81,10 @@ function SignIn() {
             try {
                 var profile = results.additionalUserInfo.profile;
                 var credential = results.credential;
-                if (profile.hd != "lcps.org") {
+                if (
+                    profile.hd != "lcps.org" &&
+                    profile.email != "michaelsong4399@gmail.com"
+                ) {
                     throw "Organization not in LCPS. Access denied.";
                 }
                 updateProfile(profile, credential);

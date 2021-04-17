@@ -22,15 +22,12 @@ const servers = {
     iceCandidatePoolSize: 10,
 };
 
-let localStream = null;
-let remoteStream = null;
-
 async function initCall(uid, pc) {
-    localStream = await navigator.mediaDevices.getUserMedia({
+    let localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
     });
-    remoteStream = new MediaStream();
+    let remoteStream = new MediaStream();
 
     // Push tracks from local stream to peer connection
     localStream.getTracks().forEach((track) => {
@@ -89,22 +86,22 @@ async function initCall(uid, pc) {
         });
     });
 
-    pc.oniceconnectionstatechange = function () {
-        if (pc.iceConnectionState == "disconnected") {
-            console.log("Disconnected");
-            deleteCollection(db, answerCandidates);
-            deleteCollection(db, offerCandidates);
-            alert("Someone disconnected.");
-        }
-    };
+    // pc.oniceconnectionstatechange = function () {
+    //     if (pc.iceConnectionState == "disconnected") {
+    //         console.log("Disconnected");
+    //         deleteCollection(db, answerCandidates);
+    //         deleteCollection(db, offerCandidates);
+    //         alert("Someone disconnected.");
+    //     }
+    // };
 }
 
 async function answerCall(callId, pc) {
-    localStream = await navigator.mediaDevices.getUserMedia({
+    let localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
     });
-    remoteStream = new MediaStream();
+    let remoteStream = new MediaStream();
 
     // Push tracks from local stream to peer connection
     localStream.getTracks().forEach((track) => {
@@ -154,14 +151,14 @@ async function answerCall(callId, pc) {
         });
     });
 
-    pc.oniceconnectionstatechange = function () {
-        if (pc.iceConnectionState == "disconnected") {
-            console.log("Disconnected");
-            deleteCollection(db, answerCandidates);
-            deleteCollection(db, offerCandidates);
-            alert("Someone disconnected.");
-        }
-    };
+    // pc.oniceconnectionstatechange = function () {
+    //     if (pc.iceConnectionState == "disconnected") {
+    //         console.log("Disconnected");
+    //         deleteCollection(db, answerCandidates);
+    //         deleteCollection(db, offerCandidates);
+    //         alert("Someone disconnected.");
+    //     }
+    // };
 }
 
 async function deleteCollection(db, collectionPath) {
@@ -221,24 +218,32 @@ function Rooms() {
 
             var pc = new RTCPeerConnection(servers);
             initCall(user.uid, pc);
-            // setupBeforeUnloadListener = () => {
-            //     window.addEventListener("beforeunload", (ev) => {
-            //         ev.preventDefault();
-            //         return deleteCollection(
-            //             db,
-            //             db
-            //                 .collection("rooms")
-            //                 .doc(uid)
-            //                 .collection("offerCandidates")
-            //         );
-            //     });
-            // };
+            window.addEventListener("beforeunload", (ev) => {
+                ev.preventDefault();
+                return deleteCollection(
+                    db,
+                    db.collection("rooms").doc(id).collection("offerCandidates")
+                );
+            });
         });
 
         return (
             <>
                 Room: {id}
                 <button onClick={async () => initCall()}>Call</button>
+                <button
+                    onClick={() => {
+                        router.push("/home");
+                        deleteCollection(
+                            db,
+                            db
+                                .collection("rooms")
+                                .doc(id)
+                                .collection("offerCandidates")
+                        );
+                    }}>
+                    Back
+                </button>
                 <div className="videos">
                     <span>
                         <h3>Local Stream</h3>
@@ -263,12 +268,35 @@ function Rooms() {
 
             var pc = new RTCPeerConnection(servers);
             answerCall(id, pc);
+            window.addEventListener("beforeunload", (ev) => {
+                ev.preventDefault();
+                return deleteCollection(
+                    db,
+                    db
+                        .collection("rooms")
+                        .doc(id)
+                        .collection("answerCandidates")
+                );
+            });
         });
 
         return (
             <>
                 Room: {id}
                 <button onClick={async () => initCall()}>Call</button>
+                <button
+                    onClick={() => {
+                        router.push("/home");
+                        deleteCollection(
+                            db,
+                            db
+                                .collection("rooms")
+                                .doc(id)
+                                .collection("answerCandidates")
+                        );
+                    }}>
+                    Back
+                </button>
                 <div className="videos">
                     <span>
                         <h3>Local Stream</h3>
