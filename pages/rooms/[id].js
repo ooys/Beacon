@@ -41,7 +41,7 @@ async function initCall(uid, pc) {
         });
     };
 
-    // webcamVideo.srcObject = localStream;
+    webcamVideo.srcObject = localStream;
     remoteVideo.srcObject = remoteStream;
 
     // callButton.disabled = false;
@@ -115,7 +115,7 @@ async function answerCall(callId, pc) {
         });
     };
 
-    // webcamVideo.srcObject = localStream;
+    webcamVideo.srcObject = localStream;
     remoteVideo.srcObject = remoteStream;
 
     const callDoc = db.collection("rooms").doc(callId);
